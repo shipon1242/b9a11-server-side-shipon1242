@@ -28,16 +28,17 @@ async function run() {
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     const serviceCollection = client.db('RepairDb').collection('services')
+    const bookedServicesCollection =client.db('RepairDb').collection('Booked')
 
-    app.get('/services', async (req, res) => {
-      const result = await serviceCollection.find().toArray()
-      res.send(result)
-    })
+    // app.get('/services', async (req, res) => {
+    //   const result = await serviceCollection.find().toArray()
+    //   res.send(result)
+    // })
     app.post('/services',async(req,res)=>{
       const services =req.body
       // console.log(services)
       const result =await serviceCollection.insertOne(services)
-      res.send(result)
+      res.send(result) 
     })
 app.get("/services/:id",async(req,res)=>{
    const id = req.params.id
@@ -45,6 +46,25 @@ app.get("/services/:id",async(req,res)=>{
    const result = await serviceCollection.findOne(query)
    res.send(result)
    
+})
+app.post("/purchaseServices",async(req,res)=>{
+  const purchase_services =req.body;
+  // console.log(purchase_services)
+  const result =await bookedServicesCollection.insertOne(purchase_services)
+  res.send(result)
+
+})
+
+app.get("/myService",async(req,res)=>{
+  //  const userEmail =req.query?.email
+  //  console.log(userEmail)
+ if(req.query?.email){
+   query ={email:req.query.email}
+ }
+  //  const query ={email:userEmail}
+   const result =await serviceCollection.find(query).toArray()
+   res.send(result)
+  
 })
     
     
