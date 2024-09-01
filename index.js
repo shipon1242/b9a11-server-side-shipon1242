@@ -30,10 +30,10 @@ async function run() {
     const serviceCollection = client.db('RepairDb').collection('services')
     const bookedServicesCollection =client.db('RepairDb').collection('Booked')
 
-    // app.get('/services', async (req, res) => {
-    //   const result = await serviceCollection.find().toArray()
-    //   res.send(result)
-    // })
+    app.get('/services', async (req, res) => {
+      const result = await serviceCollection.find().toArray()
+      res.send(result)
+    })
     app.post('/services',async(req,res)=>{
       const services =req.body
       // console.log(services)
@@ -66,6 +66,33 @@ app.get("/myService",async(req,res)=>{
    res.send(result)
   
 })
+app.put("/services/:id",async(req,res)=>{
+  const id =req.params.id
+  const upDoc = req.body
+  const {service_image,
+    service_name,
+    service_price,
+    service_area,
+    service_description,
+    service_provider_image,
+    service_provider_name,email}=upDoc
+  const updatedDoc ={
+    $set:{service_image:service_image,
+      service_name:service_name,
+      service_price:service_price,
+      service_area:service_area,
+      service_description:service_description,
+      service_provider_image:service_provider_image,
+      service_provider_name: service_provider_name,
+      email:email
+    }
+  }
+  const filter ={_id:new ObjectId(id)}
+  const options = { upsert: true }
+  const result =await serviceCollection.updateOne(filter,updatedDoc,options)
+  res.send(result)
+})
+
     
     
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
