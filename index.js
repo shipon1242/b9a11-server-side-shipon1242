@@ -99,6 +99,14 @@ app.delete('/services/:id',async(req,res)=>{
  const result =await serviceCollection.deleteOne(query) 
   res.send(result)
 })
+app.get('/booked',async(req,res)=>{
+  // console.log(req.query)
+  if(req.query?.email){
+     query = {currentUserEmail:req.query.email}
+  }
+  const result =await bookedServicesCollection.find(query).toArray()
+  res.send(result)
+})
 
     
     
