@@ -135,6 +135,12 @@ app.patch('/servicestodo/:id',async(req,res)=>{
    const result =await bookedServicesCollection.updateOne(filter,upDoc,options)
    res.send(result)
 })
+app.get('/popularServices',async(req,res)=>{
+ 
+  const result =await serviceCollection.find().limit(4).toArray()
+  // console.log(result)
+  res.send(result)
+})
 
     
     
