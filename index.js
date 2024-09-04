@@ -100,12 +100,40 @@ app.delete('/services/:id',async(req,res)=>{
   res.send(result)
 })
 app.get('/booked',async(req,res)=>{
-  // console.log(req.query)
+  // console.log(req.query.email)
   if(req.query?.email){
      query = {currentUserEmail:req.query.email}
   }
   const result =await bookedServicesCollection.find(query).toArray()
+  // console.log(result)
   res.send(result)
+})
+
+app.get('/servicestodo',async(req,res)=>{
+ 
+  if(req.query?.email){
+    query ={provider_email:req.query.email}
+  }
+  const result =await bookedServicesCollection.find(query).toArray()
+  res.send(result)
+})
+app.patch('/servicestodo/:id',async(req,res)=>{
+  const upStatus =req.query.status
+  console.log(upStatus,"yes")
+
+  const id =req.params.id
+  // // console.log(upStatus)
+  //  console.log(req.params)
+   const filter ={_id:new ObjectId(id)}
+   const options ={ upsert: true }
+   const upDoc ={
+    
+    $set:{
+      service_status:upStatus
+    }
+   }
+   const result =await bookedServicesCollection.updateOne(filter,upDoc,options)
+   res.send(result)
 })
 
     
